@@ -1,12 +1,17 @@
-using HotelListing.Api.Data;
+using HotelListingApi.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("HotelListingDbConnectionString");
-builder.Services.AddDbContext<HotelListingDbContext>(option =>option.UseSqlServer(connectionString));
+
+var ConnectionString = builder.Configuration.GetConnectionString("HotelListingDbConnectionString");
+builder.Services.AddDbContext<HotelListingDbContext>(Options =>
+{
+    Options.UseSqlServer(ConnectionString);
+});
+
 
 
 builder.Services.AddControllers();
@@ -22,6 +27,7 @@ builder.Services.AddCors(Options =>
         AllowAnyOrigin());
 });
 
+builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
 
 var app = builder.Build();
 
@@ -34,6 +40,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+
 
 app.UseAuthorization();
 
