@@ -1,4 +1,7 @@
+using HotelListingApi.Configuration;
+using HotelListingApi.Contracts;
 using HotelListingApi.Data;
+using HotelListingApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -18,6 +21,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 
 builder.Services.AddCors(Options =>
 {
