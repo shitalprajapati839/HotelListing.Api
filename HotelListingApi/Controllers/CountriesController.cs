@@ -20,10 +20,10 @@ namespace HotelListingApi.Controllers
 
         public ICountriesRepository _countriesRepository { get; }
 
-        public CountriesController(ICountriesRepository countriesRepository ,IMapper mapper)
+        public CountriesController(IMapper mapper ,ICountriesRepository countriesRepository)
         {
-            _countriesRepository = countriesRepository;
-            _mapper = mapper;
+            this._countriesRepository = countriesRepository;
+            this._mapper = mapper;
         }
 
         // GET: api/Countries
@@ -39,7 +39,7 @@ namespace HotelListingApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CountryDto>> GetCountry(int id)
         {
-            var country = _countriesRepository.GetDetails(id);
+            var country = await _countriesRepository.GetDetails(id);
 
             if (country == null)
             {
